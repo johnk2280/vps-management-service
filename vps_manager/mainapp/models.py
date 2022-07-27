@@ -4,29 +4,31 @@ from django.db import models
 
 
 class VPS(models.Model):
-    STATUSES = (
-        ('started', 'STARTED'),
-        ('blocked', 'BLOCKED'),
-        ('stopped', 'STOPPED'),
+    STARTED = 'started'
+    BLOCKED = 'blocked'
+    STOPPED = 'stopped'
+
+    STATUS_CHOICES = (
+        (STARTED, 'STARTED'),
+        (BLOCKED, 'BLOCKED'),
+        (STOPPED, 'STOPPED'),
     )
 
-    uid = models.UUIDField(
+    uid = models.PositiveIntegerField(
         verbose_name='UID',
         primary_key=True,
-        default=uuid.uuid4,
-        editable=False,
     )
-    cpu = models.SmallIntegerField(
+    cpu = models.PositiveSmallIntegerField(
         verbose_name='CPU cores count',
         null=False,
         blank=False,
     )
-    ram = models.SmallIntegerField(
+    ram = models.PositiveIntegerField(
         verbose_name='RAM volume',
         null=False,
         blank=False,
     )
-    hdd = models.SmallIntegerField(
+    hdd = models.PositiveIntegerField(
         verbose_name='HDD volume',
         null=False,
         blank=False,
@@ -34,14 +36,23 @@ class VPS(models.Model):
     status = models.CharField(
         verbose_name='VPS status',
         max_length=7,
-        choices=STATUSES,
-        default='STOPPED',
+        choices=STATUS_CHOICES,
+        default=STOPPED,
     )
     created_at = models.DateTimeField(
         verbose_name='Created at',
-        auto_now=True,
+        auto_now_add=True,
     )
     updated_at = models.DateTimeField(
         verbose_name='Updated at',
-        auto_now_add=True,
+        auto_now=True,
     )
+
+    class Meta:
+        db_table = 'vps'
+        ordering = ('-created_at',)
+        verbose_name = 'vps object'
+        verbose_name_plural = 'vps objects'
+
+    def __str__(self):
+        return self.uid

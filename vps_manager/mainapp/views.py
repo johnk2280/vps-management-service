@@ -1,3 +1,9 @@
-from django.shortcuts import render
+from rest_framework.viewsets import ModelViewSet
 
-# Create your views here.
+from .models import VPS
+from .serializers import VPSSerializer
+
+
+class VPSModelViewSet(ModelViewSet):
+    queryset = VPS.objects.all()
+    serializer_class = VPSSerializer
