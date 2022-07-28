@@ -5,8 +5,10 @@ RUN apt-get update &&  \
 
 RUN pip3 install --upgrade pip
 
-COPY ./backend/vps_manager ./
-COPY ./requirements.txt ./
+WORKDIR /app
+COPY ./backend/vps_manager .
+COPY ./requirements.txt .
 
 RUN pip3 install -r requirements.txt
-RUN pip3 install gunicorn
+RUN python manage.py collectstatic --noinput
+RUN ls -lia
