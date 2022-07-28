@@ -1,0 +1,29 @@
+version: '3.6'
+
+services:
+  db:
+    image: postgres
+    privileged: true
+    ports:
+      - "9501:5432"
+    environment:
+      POSTGRES_USER: johnk
+      POSTGRES_PASSWORD: johnk123
+      POSTGRES_DB: vps_test
+  vps_manager:
+    build:
+      context: .
+    expose:
+      - "8080"
+    command: bash -c "python manage.py migrate && gunicorn vps_manager.wsgi -b 0.0.0.0:8080"
+    depends_on:
+      - db
+  nginx:
+    build: ./nginx
+    ports:
+      - "8000:80"
+    depends_on:
+      - vps_manager
+
+
+
