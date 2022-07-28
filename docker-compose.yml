@@ -10,12 +10,14 @@ services:
       POSTGRES_USER: johnk
       POSTGRES_PASSWORD: johnk123
       POSTGRES_DB: vps_test
-  adminer:
-    image: adminer:4.7.8-standalone
-    restart: always
+  vps_manager:
+    build:
+      context: .
     ports:
       - "8080:8080"
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8080"
     depends_on:
       - db
+
 
 
